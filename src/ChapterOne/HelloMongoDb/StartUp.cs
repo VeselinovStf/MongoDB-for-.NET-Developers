@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using AtlasConnectionString;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace HelloMongoDb
@@ -9,7 +10,7 @@ namespace HelloMongoDb
         public static void Main(string[] args)
         { 
 
-            var mongoClient = new MongoClient(@"mongodb+srv://m001-student:m001-mongodb-basics@sandbox.rcnkl.mongodb.net/Sandbox?retryWrites=true&w=majority");
+            var mongoClient = new MongoClient(AtlasConnection.ConnectionString);
 
             var database = mongoClient.GetDatabase("sample_mflix");
             var collection = database.GetCollection<BsonDocument>("movies");
