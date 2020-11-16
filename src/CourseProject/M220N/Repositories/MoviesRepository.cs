@@ -120,9 +120,29 @@ namespace M220N.Repositories
             //return await _moviesCollection
             //   .Find(...)
             //   .Project(...)
+            //   .SortByDescending
             //   .ToListAsync(cancellationToken);
 
-            return null;
+
+
+            var findFilter = Builders<Movie>
+                .Filter
+                .All(m => m.Countries, countries);
+
+            var projection = Builders<Movie>
+                .Projection
+                .Include(m => m.Id)
+                .Include(m => m.Title);
+
+            var sort = Builders<Movie>
+                .Sort
+                .Descending(m => m.Title);
+
+            return await _moviesCollection
+                .Find(findFilter)
+                .Sort(sort)
+                .Project<MovieByCountryProjection>(projection)
+                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
