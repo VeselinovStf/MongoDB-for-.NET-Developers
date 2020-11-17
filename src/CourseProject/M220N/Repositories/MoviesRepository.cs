@@ -217,13 +217,21 @@ namespace M220N.Repositories
                .Find(...)
                .ToListAsync(cancellationToken);*/
 
+            var filter = Builders<Movie>.Filter.In("genres", genres);
+
+            return await _moviesCollection
+                .Find(filter)
+                 .Limit(limit)
+                .Skip(page * limit)
+                .ToListAsync(cancellationToken);
+
             // // TODO Ticket: Paging
             // TODO Ticket: Paging
             // Modify the code you added in the Text and Subfield ticket to
             // include pagination. Refer to the other methods in this class
             // if you need a hint.
 
-            return returnValue;
+            //return returnValue;
         }
 
         /// <summary>
