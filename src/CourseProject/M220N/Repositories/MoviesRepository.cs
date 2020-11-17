@@ -165,7 +165,7 @@ namespace M220N.Repositories
                 .Project<MovieByTextProjection>(project)
                 .Sort(sort)
                 .Limit(limit)
-                .Skip(page * limit)
+                .Skip(limit * page)
                 .ToListAsync(cancellationToken);
         }
 
@@ -223,6 +223,7 @@ namespace M220N.Repositories
                 .Find(filter)
                  .Limit(limit)
                 .Skip(page * limit)
+                .Sort(sort)
                 .ToListAsync(cancellationToken);
 
             // // TODO Ticket: Paging
