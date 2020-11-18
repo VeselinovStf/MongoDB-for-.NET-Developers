@@ -3,7 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization;
+using SFilix.Data;
+using SFlix.Data;
+using SFlix.Data.Abstraction;
+using SFlix.Data.Repositories;
+using SFlix.Models;
 
 namespace SFilix.API
 {
@@ -25,6 +32,15 @@ namespace SFilix.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SFlix API", Version = "v1" });
             });
+
+            services.Configure<DbSetting>(Configuration.GetSection("MongoConnection"));
+            services.AddSingleton<DbSetting>(x => x.GetRequiredService<IOptions<DbSetting>>().Value);
+
+            services.AddScoped<SFlixDbContext>();
+
+            services.AddScoped<IRepository<Movie>, MovieRepository>();
+
+            BsonClassMap.RegisterClassMap<Movie>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
