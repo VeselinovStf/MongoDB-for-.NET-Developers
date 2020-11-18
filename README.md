@@ -1,9 +1,12 @@
 # MongoDB-for-.NET-Developers
-Mongo DB University M220N: MongoDB for .NET Developers course repository
+MongoDb in C# Repository
 
-- Learn the essentials of ASP.NET application development with MongoDB.
+## Repository Structure
 
-## Chapters
+### MongoUniversity 
+- Mongo DB University M220N: MongoDB for .NET Developers course repository
+
+#### Chapters
 
 - Chapter 1: Getting Started - Course logistics, requirements for environment setup, and application architecture.
 
@@ -16,5 +19,12 @@ Mongo DB University M220N: MongoDB for .NET Developers course repository
 - Chapter 5: Resiliency- Connection pooling, error and timeout handling, and principle of least privilege.
 
 - Final Exam - Questions covering the contents of the class.
+
+- Learn the essentials of ASP.NET application development with MongoDB.
+
+### Projects
+- Basics - "Using MongoDB with ASP.NET MVC" Pluralsight cours project
+
+
 
 ## Status
