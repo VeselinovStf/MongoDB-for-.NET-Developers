@@ -34,5 +34,20 @@ namespace SFilix.API.Controllers
             }
             
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMoviewAsync([FromBody] Movie movie)
+        {
+            try
+            {
+                await _movieRepository.AddAsync(movie);
+
+                return Ok(movie);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -16,6 +16,11 @@ namespace SFlix.Data.Repositories
             _dbContext = dbContext;           
         }
 
+        public async Task AddAsync(Movie movie)
+        {
+            await _dbContext.Movies.InsertOneAsync(movie);
+        }
+
         public async Task<ICollection<Movie>> GetAllAsync()
         {
             return await _dbContext.Movies.Find(new BsonDocument()).ToListAsync();

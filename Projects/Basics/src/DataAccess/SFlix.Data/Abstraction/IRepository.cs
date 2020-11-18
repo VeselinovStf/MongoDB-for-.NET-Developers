@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SFlix.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFlix.Data.Abstraction
@@ -8,5 +9,6 @@ namespace SFlix.Data.Abstraction
         
 
         Task<ICollection<T>> GetAllAsync();
+        Task AddAsync(Movie movie);
     }
 }

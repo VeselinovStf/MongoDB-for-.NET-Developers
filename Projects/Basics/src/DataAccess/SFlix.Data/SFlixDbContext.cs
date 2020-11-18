@@ -15,7 +15,8 @@ namespace SFlix.Data
             var client = new MongoClient(dbSetting.Value.ConnectionString);
             var database = client.GetDatabase(dbSetting.Value.DatabaseName);
 
-            
+            var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
+            ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
 
             Database = database;
         }
@@ -24,10 +25,6 @@ namespace SFlix.Data
         { 
             get 
             {
-
-                var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-                ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
-
                 return Database.GetCollection<Movie>("movies"); 
             }
         }
