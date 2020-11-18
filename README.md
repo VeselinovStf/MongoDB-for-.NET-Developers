@@ -3,8 +3,8 @@ MongoDb in C# Repository
 
 ## Repository Structure
 
-### MongoUniversity 
-- Mongo DB University M220N: MongoDB for .NET Developers course repository
+### MongoUniversity
+- Mongo DB University M220N: MongoDB for .NET Developers course repository - M220N_MongoDB_NETDev.sln
 
 #### Chapters
 
@@ -23,7 +23,7 @@ MongoDb in C# Repository
 - Learn the essentials of ASP.NET application development with MongoDB.
 
 ### Projects
-- Basics - "Using MongoDB with ASP.NET MVC" Pluralsight cours project
+- Basics - "Using MongoDB with ASP.NET MVC" Pluralsight cours project - UsingMongoDBWithCoreMVC.sln
 
 
 
