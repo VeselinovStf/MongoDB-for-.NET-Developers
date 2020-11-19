@@ -87,5 +87,21 @@ namespace SFilix.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        [Route("/deletemovie")]
+        public async Task<IActionResult> DeleteMoviewAsync([FromBody] string id)
+        {
+            try
+            {
+                await _movieRepository.DeleteMovieAsync(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

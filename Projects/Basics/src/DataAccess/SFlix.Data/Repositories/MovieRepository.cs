@@ -71,5 +71,12 @@ namespace SFlix.Data.Repositories
                 throw new Exception("Can't Update");
             }
         }
+
+        public async Task DeleteMovieAsync(string id)
+        {
+            var filter = Builders<Movie>.Filter.Eq(m => m.Id, id);
+
+            await _dbContext.Movies.DeleteOneAsync(filter);
+        }
     }
 }
