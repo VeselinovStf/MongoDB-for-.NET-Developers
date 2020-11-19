@@ -27,7 +27,7 @@ namespace SFlix.Models
         public string Title { get; set; }
 
         [BsonElement("year")]
-        public object Year { get; set; }
+        public int Year { get; set; }
 
         [BsonElement("plot")]
         public string Plot { get; set; }

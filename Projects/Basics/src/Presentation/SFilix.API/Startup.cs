@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization;
 using SFilix.Data;
 using SFlix.Data;
-using SFlix.Data.Abstraction;
 using SFlix.Data.Repositories;
 using SFlix.Models;
 
@@ -38,7 +37,7 @@ namespace SFilix.API
 
             services.AddScoped<SFlixDbContext>();
 
-            services.AddScoped<IRepository<Movie>, MovieRepository>();
+            services.AddScoped<MovieRepository>();
 
             BsonClassMap.RegisterClassMap<Movie>();
         }
