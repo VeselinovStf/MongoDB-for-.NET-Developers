@@ -273,18 +273,14 @@ namespace M220N.Repositories
             // I build the facets
             var facetStage = BuildFacetStage();
 
-        
-
             // I am the pipeline that runs all of the stages
             var pipeline = new[]
             {
-               
                 matchStage,
-                 facetStage,
-                limitStage,
+                sortStage,
                 skipStage,
-                sortStage
-                // add the remaining stages in the correct order
+                limitStage,
+                facetStage
 
             };
 
