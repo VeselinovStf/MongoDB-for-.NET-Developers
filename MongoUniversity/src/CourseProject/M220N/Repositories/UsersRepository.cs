@@ -82,6 +82,7 @@ namespace M220N.Repositories
                     HashedPassword = PasswordHashOMatic.Hash(password)
                 };
 
+                _usersCollection.WithWriteConcern(new WriteConcern(w: 1));
                 await _usersCollection.InsertOneAsync(user);
                 //
                 // // TODO Ticket: Durable Writes
