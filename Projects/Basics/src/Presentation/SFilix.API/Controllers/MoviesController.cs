@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SFilix.API.RequestModels;
-using SFlix.Data.Repositories;
+using SFlix.Data;
 using SFlix.Models;
 using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,11 +15,12 @@ namespace SFilix.API.Controllers
     [Route("/api/v1/movies")]
     public class MoviesController : ControllerBase
     {
-        private readonly MovieRepository _movieRepository;
-
-        public MoviesController(MovieRepository movieRepository)
+        private readonly SFlixDbContext _dbContext;
+      
+        public MoviesController(SFlixDbContext dbContext)
         {
-            _movieRepository = movieRepository;
+            _dbContext = dbContext;
+            
         }
 
         [HttpGet]
@@ -26,7 +29,7 @@ namespace SFilix.API.Controllers
         {
             try
             {
-                var movies = await _movieRepository.GetAllAsync();
+                var movies = await _dbContext.Movies.Find(new BsonDocument()).ToListAsync();
 
                 return Ok(movies.Take(5));
             }
@@ -43,8 +46,11 @@ namespace SFilix.API.Controllers
         {
             try
             {
-                var movie = await _movieRepository.GetByTitleAsync(movieTitle);
 
+                var movieFilter = Builders<Movie>.Filter.Eq(m => m.Title, movieTitle);
+
+                var movie = await _dbContext.Movies.Find(movieFilter).FirstAsync();
+              
                 return Ok(movie);
             }
             catch (Exception ex)
@@ -61,7 +67,7 @@ namespace SFilix.API.Controllers
         {
             try
             {
-                await _movieRepository.AddMovieAsync(movie.Title, movie.Plot,movie.Year);
+                await _dbContext.Movies.InsertOneAsync(new Movie() { Title = movie.Title, Plot = movie.Plot, Year = movie.Year});
 
                 return Ok(movie);
             }
@@ -73,14 +79,32 @@ namespace SFilix.API.Controllers
 
         [HttpPut]
         [Route("/updatemovie")]
-        public async Task<IActionResult> AddMoviewAsync([FromBody] UpdateMovieRequest movie)
+        public async Task<IActionResult> UpdateMoviewAsync([FromBody] UpdateMovieRequest movie)
         {
             try
             {
-                var movieUpdate = await _movieRepository.UpdateMovieAsync(
-                    movie.Id, movie.Title, movie.Plot, movie.Year, movie.InsertIfNotExist);
+                var filter = Builders<Movie>.Filter.Eq(m => m.Id, movie.Id);
 
-                return Ok(movieUpdate);
+                var updateDifinition = new BsonDocument()
+            {
+                {
+                    "$set", new BsonDocument()
+                    {
+                        {"title", movie.Title },
+                        {"plot", movie.Plot},
+                        {"year", movie.Year},
+                    }
+                }
+            };
+
+                var updateOptions = new UpdateOptions();
+                updateOptions.IsUpsert = movie.InsertIfNotExist;
+
+                var update = await _dbContext.Movies.UpdateOneAsync(filter, updateDifinition, updateOptions);
+
+                var updated = await this._dbContext.Movies.FindAsync(filter);
+
+                return Ok(updated);
             }
             catch (Exception ex)
             {
@@ -94,7 +118,9 @@ namespace SFilix.API.Controllers
         {
             try
             {
-                await _movieRepository.DeleteMovieAsync(id);
+                var filter = Builders<Movie>.Filter.Eq(m => m.Id, id);
+
+                await _dbContext.Movies.DeleteOneAsync(filter);
 
                 return Ok();
             }
