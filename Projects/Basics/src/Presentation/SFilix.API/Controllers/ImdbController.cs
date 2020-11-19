@@ -35,11 +35,36 @@ namespace SFilix.API.Controllers
                     {
                         Id = m.Id,
                         Votes = m.Votes,
-                        Rating = m.Rating
+                        Rating = m.Rating,
+                        MovieId = m.MovieId
                     })
                     .OrderBy(m => m.Votes)
                     .ThenBy(c => c.Rating)
                     .ToListAsync();
+
+                return Ok(imdbs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("/getallWithMovie")]
+        public async Task<IActionResult> GetAllWithMovieAsync()
+        {
+            try
+            {
+                var imdbs = await _dbContext.Imdbs
+                    .AsQueryable()
+                    .GroupJoin(
+                         _dbContext.Movies,
+                        i => i.MovieId,
+                        m => m.ImdbId,
+                        (r, o) => new { r.Rating, o.First().Title }
+                    ).ToListAsync();
 
                 return Ok(imdbs);
             }
@@ -101,7 +126,7 @@ namespace SFilix.API.Controllers
         {
             try
             {
-                var newImdb = new Imdb() { Votes = imdb.Votes,  Rating = imdb.Rating};
+                var newImdb = new Imdb() { Votes = imdb.Votes,  Rating = imdb.Rating, MovieId = imdb.MovieId};
 
                 await _dbContext.Imdbs.InsertOneAsync(newImdb);
 

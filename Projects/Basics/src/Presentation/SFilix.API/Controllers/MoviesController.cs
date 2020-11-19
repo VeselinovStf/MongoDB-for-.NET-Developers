@@ -31,7 +31,7 @@ namespace SFilix.API.Controllers
             {
                 var movies = await _dbContext.Movies.Find(new BsonDocument()).ToListAsync();
 
-                return Ok(movies.Take(5));
+                return Ok(movies);
             }
             catch (Exception ex)
             {
@@ -93,6 +93,7 @@ namespace SFilix.API.Controllers
                         {"title", movie.Title },
                         {"plot", movie.Plot},
                         {"year", movie.Year},
+                        {"imdbId", movie.ImdbId }
                     }
                 }
             };

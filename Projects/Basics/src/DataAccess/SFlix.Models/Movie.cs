@@ -32,6 +32,8 @@ namespace SFlix.Models
         [BsonElement("plot")]
         public string Plot { get; set; }
 
-       
+        [BsonElement("imdbId")]
+
+        public string ImdbId { get; set; }
     }
 }

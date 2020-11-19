@@ -12,5 +12,7 @@ namespace SFilix.API.RequestModels
 
        
         public int Votes { get; set; }
+
+        public string MovieId { get; set; }
     }
 }

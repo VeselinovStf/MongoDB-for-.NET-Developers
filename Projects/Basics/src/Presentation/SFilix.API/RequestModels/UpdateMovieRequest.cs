@@ -13,6 +13,8 @@ namespace SFilix.API.RequestModels
         public string Plot { get; set; }
 
         public int Year { get; set; }
+
+        public string ImdbId { get; set; }
         public bool InsertIfNotExist { get; set; }
     }
 }

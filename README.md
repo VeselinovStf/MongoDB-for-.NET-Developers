@@ -25,6 +25,7 @@ MongoDb in C# Repository
 ### Projects
 - Basics - "Using MongoDB with ASP.NET MVC" Pluralsight cours project - UsingMongoDBWithCoreMVC.sln
 	-	Created simple .NET Core API to learn basics of MongoDb C# Driver Use
+	-	Use of BsonDocument for query, LINQ, Aggragation Framework
 	-	Project misses proper architecture, exception handling, modeling and etc.
 
 ## Status

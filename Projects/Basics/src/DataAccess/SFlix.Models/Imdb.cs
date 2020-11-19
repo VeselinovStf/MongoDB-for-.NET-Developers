@@ -23,5 +23,8 @@ namespace SFlix.Models
 
         [BsonElement("votes")]
         public int Votes { get; set; }
+
+        [BsonElement("movieId")]
+        public string MovieId { get; set; }
     }
 }
