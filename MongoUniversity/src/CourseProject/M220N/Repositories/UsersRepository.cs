@@ -53,8 +53,7 @@ namespace M220N.Repositories
             // TODO Ticket: User Management
             // Retrieve the user document corresponding with the user's email.
             //
-            // // return await _usersCollection.Find(...)
-            return null;
+            return await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -76,8 +75,14 @@ namespace M220N.Repositories
                 // DO NOT STORE CLEAR-TEXT PASSWORDS! Instead, use the helper class
                 // we have created for you: PasswordHashOMatic.Hash(password)
                 //
-                // // user = new User...
-                // // await _usersCollection.InsertOneAsync(...)
+                user = new User()
+                {
+                    Name = name,
+                    Email = email,
+                    HashedPassword = PasswordHashOMatic.Hash(password)
+                };
+
+                await _usersCollection.InsertOneAsync(user);
                 //
                 // // TODO Ticket: Durable Writes
                 // // To use a more durable Write Concern for this operation, add the 
@@ -126,13 +131,14 @@ namespace M220N.Repositories
                 // user.AuthToken that is passed in from the Controller.
                 // 
                 // If the session doesn't exist, allow MongoDB to create a
-                // new one by passing the IsUpsert update option.
-                //  await _sessionsCollection.UpdateOneAsync(
-                //  new BsonDocument(...),
-                //  Builders<Session>.Update.Set(...).Set(...),
-                //  new UpdateOptions(...));
+                //new one by passing the IsUpsert update option.
+                  await _sessionsCollection.UpdateOneAsync(
+                    new BsonDocument("user_id", user.Email),
+                            Builders<Session>.Update.Set(s => s.UserId, user.Email).Set(s => s.Jwt, user.AuthToken),
+                                new UpdateOptions() {  IsUpsert = true});
 
                 storedUser.AuthToken = user.AuthToken;
+
                 return new UserResponse(storedUser);
             }
             catch (Exception ex)
@@ -153,7 +159,7 @@ namespace M220N.Repositories
             // TODO Ticket: User Management
             // Delete the document in the `sessions` collection matching the email.
             
-            await _sessionsCollection.DeleteOneAsync(new BsonDocument(), cancellationToken);
+            await _sessionsCollection.DeleteOneAsync(new BsonDocument("email", email), cancellationToken);
             return new UserResponse(true, "User logged out.");
         }
 
@@ -167,7 +173,7 @@ namespace M220N.Repositories
         {
             // TODO Ticket: User Management
             // Retrieve the session document corresponding with the user's email.
-            return await _sessionsCollection.Find(new BsonDocument()).FirstOrDefaultAsync();
+            return await _sessionsCollection.Find(new BsonDocument("email", email)).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -221,13 +227,11 @@ namespace M220N.Repositories
                 // TODO Ticket: User Preferences
                 // Use the data in "preferences" to update the user's preferences.
                 //
-                // updateResult = await _usersCollection.UpdateOneAsync(
-                //    new BsonDocument(),
-                //    Builders<User>.Update.Set("TODO", preferences),
-                //    /* Be sure to pass a new UpdateOptions object here,
-                //       setting IsUpsert to false! */
-                //    new UpdateOptions(),
-                //    cancellationToken);
+                updateResult = await _usersCollection.UpdateOneAsync(
+                   new BsonDocument("email", email),
+                   Builders<User>.Update.Set("preferences", preferences),
+                   new UpdateOptions() {IsUpsert = false },
+                   cancellationToken);
 
                 return updateResult.MatchedCount == 0
                     ? new UserResponse(false, "No user found with that email")
