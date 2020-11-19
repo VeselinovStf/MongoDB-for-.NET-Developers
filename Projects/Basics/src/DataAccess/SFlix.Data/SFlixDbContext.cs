@@ -44,5 +44,13 @@ namespace SFlix.Data
             }
         }
 
+        public IMongoCollection<Imdb> Imdbs
+        {
+            get
+            {
+                return Database.GetCollection<Imdb>("imdbs");
+            }
+        }
+
     }
 }
