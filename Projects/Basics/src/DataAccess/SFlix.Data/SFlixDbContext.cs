@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Events;
 using SFilix.Data;
 using SFlix.Models;
 
@@ -12,7 +14,14 @@ namespace SFlix.Data
 
         public SFlixDbContext(IOptions<DbSetting> dbSetting)
         {
-            var client = new MongoClient(dbSetting.Value.ConnectionString);
+            var settings = MongoClientSettings.FromUrl(new MongoUrl(dbSetting.Value.ConnectionString));
+
+            //Better solution is to inject ILogger - for ease i use cwl
+            settings.ClusterConfigurator = builder => builder.Subscribe<CommandStartedEvent>(e => {
+                System.Console.WriteLine($"{e.CommandName} - {e.Command.ToJson()}");
+            });
+
+            var client = new MongoClient(settings);
             var database = client.GetDatabase(dbSetting.Value.DatabaseName);
 
             var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
