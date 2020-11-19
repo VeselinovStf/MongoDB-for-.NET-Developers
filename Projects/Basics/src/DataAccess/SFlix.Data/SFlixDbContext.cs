@@ -28,6 +28,14 @@ namespace SFlix.Data
                 return Database.GetCollection<Movie>("movies"); 
             }
         }
-       
+
+        public IMongoCollection<Comment> Comments
+        {
+            get
+            {
+                return Database.GetCollection<Comment>("comments");
+            }
+        }
+
     }
 }
