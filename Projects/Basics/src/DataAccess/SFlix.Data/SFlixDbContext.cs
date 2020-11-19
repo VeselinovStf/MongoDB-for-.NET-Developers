@@ -17,10 +17,8 @@ namespace SFlix.Data
             var settings = MongoClientSettings.FromUrl(new MongoUrl(dbSetting.Value.ConnectionString));
 
             //Better solution is to inject ILogger - for ease i use cwl
-            settings.ClusterConfigurator = builder => builder.Subscribe<CommandStartedEvent>(e => {
-                System.Console.WriteLine($"{e.CommandName} - {e.Command.ToJson()}");
-            });
-
+            settings.ClusterConfigurator = builder => builder.Subscribe(new MongoClientCommandEventHandler());
+          
             var client = new MongoClient(settings);
             var database = client.GetDatabase(dbSetting.Value.DatabaseName);
 
