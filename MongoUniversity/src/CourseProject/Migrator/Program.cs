@@ -18,7 +18,7 @@ namespace Migrator
         static IMongoCollection<Movie> _moviesCollection;
 
         // TODO: Update this connection string as needed.
-        static string mongoConnectionString = "";
+        static string mongoConnectionString = "mongodb://root:root@localhost:27017/?authSource=admin";
         
         static async Task Main(string[] args)
         {
@@ -35,7 +35,12 @@ namespace Migrator
                 // datePipelineResults. You will need to use a ReplaceOneModel<Movie>
                 // (https://api.mongodb.com/csharp/current/html/T_MongoDB_Driver_ReplaceOneModel_1.htm).
                 //
-                // // bulkWriteDatesResult = await _moviesCollection.BulkWriteAsync(...
+             
+
+                var listWrites = new List<WriteModel<Movie>>();
+                datePipelineResults.ForEach(e => listWrites.Add(new ReplaceOneModel<Movie>(Builders<Movie>.Filter.Eq(f => f.Id,e.Id), e)));
+
+                bulkWriteDatesResult = await _moviesCollection.BulkWriteAsync(listWrites);
 
                 Console.WriteLine($"{bulkWriteDatesResult.ProcessedRequests.Count} records updated.");
             }
@@ -50,7 +55,11 @@ namespace Migrator
                 // ratingPipelineResults. You will need to use a ReplaceOneModel<Movie>
                 // (https://api.mongodb.com/csharp/current/html/T_MongoDB_Driver_ReplaceOneModel_1.htm).
                 //
-                // // bulkWriteRatingsResult = await _moviesCollection.BulkWriteAsync(...
+
+                var listWrites = new List<WriteModel<Movie>>();
+                ratingPipelineResults.ForEach(e => listWrites.Add(new ReplaceOneModel<Movie>(Builders<Movie>.Filter.Eq(f => f.Id, e.Id), e)));
+
+                bulkWriteRatingsResult = await _moviesCollection.BulkWriteAsync(listWrites);
 
                 Console.WriteLine($"{bulkWriteRatingsResult.ProcessedRequests.Count} records updated.");
             }
