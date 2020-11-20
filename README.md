@@ -29,3 +29,5 @@ MongoDb in C# Repository
 	-	Project misses proper architecture, exception handling, modeling and etc.
 
 ## Status
+
+- Completed - Final Grade:97%
